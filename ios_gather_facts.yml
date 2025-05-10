@@ -1,12 +1,13 @@
 ---
 - hosts: ios
-  gather_facts: no
+    tasks:
 
-  tasks:
+# Gather Ansible Facts About Access #
+    - name: Gather Ansible Facts About Access
+      ios_facts:
+        gather_subset:
+          - all
 
-  - name: GATHER FACTS
-    ios_facts:
-    
-    register: facts
-
-  - debug: var=command_output.stdout
+# Print facts on screen #          
+    - debug: 
+        msg: "{{ ansible_facts }}"
