@@ -2,10 +2,12 @@
 - hosts: ios
   gather_facts: no
   tasks:
-  - name: backup ios config
-     ios_config:
+ - name: Get running-config and save it
+      ios_config:
        backup: yes
        backup_options:
-         filename: "running-config.txt"
-         dir_path: "/data/{{ inventory_hostname }}"
-
+         #ansible_host = getting device IP, ansible_net_hostname = getting device hostname
+         filename: "{{ ansible_net_hostname }}_{{ ansible_host }}.cfg"
+         #Please change /home/backup to your direcotry
+         #Every time create a new directory under named date and time
+         dir_path: /home/backup/
