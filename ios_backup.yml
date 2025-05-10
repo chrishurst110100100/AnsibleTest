@@ -3,7 +3,7 @@
   gather_facts: no
   tasks:
   - name: Get running-config and save it
-      ios_config:
+    ios_config:
        backup: yes
        backup_options:
          #ansible_host = getting device IP, ansible_net_hostname = getting device hostname
