@@ -11,3 +11,43 @@
     - debug: 
         msg: "{{ ansible_facts }}"
 
+# Set Facts #
+    - set_fact:
+        image: "{{ ansible_facts['net_image'] }}"
+        version: "{{ ansible_facts['net_version'] }}"
+        serial: "{{ ansible_facts['net_serialnum'] }}"
+        model: "{{ ansible_facts['net_model'] }}"
+        ip_addresses: "{{ ansible_facts['net_all_ipv4_addresses'] }}"
+        disk_total: "{{ ansible_facts | json_query('net_filesystems_info.bootdisk.spacetotal_kb') }}"
+        disk_free: "{{ ansible_facts | json_query('net_filesystems_info.bootdisk.spacefree_kb') }}"
+        mem_total: "{{ ansible_facts['net_memtotal_mb'] | default('N/A') }}"
+        mem_free: "{{ ansible_facts['net_memfree_mb'] | default('N/A') }}"
+
+# Create CSV file with results #
+    - name: Create CSV
+      copy: 
+        content: | 
+          {{ inventory_hostname }},{{ image }},{{ version }},{{ serial }},{{ model }},{{ disk_total }},{{ disk_free }},{{ mem_total }},{{ mem_free }}
+        dest: /home/Documentation/{{ inventory_hostname }}_IOS_facts.csv       
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_IOS_facts.csv
+        regexp: '\[|\]|"'
+        replace: ''      
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_IOS_facts.csv
+        regexp: "'"
+        replace: ''
+
+# Add Header Row to CSV #
+    - name: Header Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_IOS_facts.csv
+        insertbefore: BOF
+        line: Hostname,Image,Version,Serial Number,Model,Total Disk,Free Disk,Total Memory,Free Memory
+
