@@ -51,3 +51,161 @@
         insertbefore: BOF
         line: Hostname,Image,Version,Serial Number,Model,Total Disk,Free Disk,Total Memory,Free Memory
 
+
+## IP ADDRESS FACTS SECTION ##
+# Create CSV file with IP results #
+    - name: Create IP CSV
+      copy: 
+        content: | 
+          {{ ip_addresses }}
+        dest: /home/Documentation/{{ inventory_hostname }}_IP_facts.csv       
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_IP_facts.csv
+        regexp: '\[|\]|"'
+        replace: ''      
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_IP_facts.csv
+        regexp: "'"
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_IP_facts.csv
+        regexp: ','
+        replace: '\n'
+
+# Add Header Row to CSV #
+    - name: Header Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_IP_facts.csv
+        insertbefore: BOF
+        line: IP Addresses
+
+
+
+## Interface Facts Section ##
+
+# Remove file #
+    - name: Remove file (delete file)
+      file:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        state: absent
+
+# Create Interface CSV file with results #
+    - name: Data Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        line: "{{ item.key }},{{ item.value.description }},{{ item.value.operstatus }},{{ item.value.lineprotocol }},{% if item.value.ipv4 %} {{ item.value.ipv4 }} {% else %} NA,NA {% endif %},{{ item.value.bandwidth }},{{ item.value.duplex }},{{ item.value.macaddress }},{{ item.value.type }},{{ item.value.mediatype }},{{ item.value.mtu }}"
+        create: yes
+      loop: "{{ ansible_facts.net_interfaces | dict2items }}" 
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        regexp: '\[|\]|"'
+        replace: ''      
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        regexp: "'"
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        regexp: "{subnet: "
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        regexp: "address: "
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        regexp: "}"
+        replace: ''
+
+# Add Header Row to CSV #
+    - name: Header Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_Interface_facts.csv
+        insertbefore: BOF
+        line: Interface,Description,Administrative Status,Line Protocol,Subnet Mask,IP Address,Bandwidth,Duplex,MAC Address,Type,Media Type,MTU
+
+
+# Neighbor Facts #
+# Remove file #
+    - name: Remove file (delete file)
+      file:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        state: absent
+
+# Create Interface CSV file with results #
+    - name: Data Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        line: "{{ item.key }},{{ item.value }}"
+        create: yes
+      loop: "{{ ansible_facts.net_neighbors | dict2items }}" 
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        regexp: '\[|\]|"'
+        replace: ''      
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        regexp: "'"
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        regexp: "{host:"
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        regexp: "port:"
+        replace: ''
+
+# Format CSV #
+    - name: Format CSV File Clean Up
+      replace:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        regexp: "}"
+        replace: ''
+
+# Add Header Row to CSV #
+    - name: Header Row
+      lineinfile:
+        path: /home/Documentation/{{ inventory_hostname }}_Neighbor_facts.csv
+        insertbefore: BOF
+        line: Interface,Neighbor,Port
+
+
+
+        
