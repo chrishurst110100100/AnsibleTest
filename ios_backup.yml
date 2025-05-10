@@ -2,7 +2,7 @@
 - hosts: ios
   gather_facts: no
   tasks:
- - name: Get running-config and save it
+  - name: Get running-config and save it
       ios_config:
        backup: yes
        backup_options:
