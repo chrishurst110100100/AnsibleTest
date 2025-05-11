@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: yes
+  connection: network_cli
+
+  tasks:
+    - name: Gather facts from the WLC
+      cisco.ios.ios_facts:
+
+    - name: Display gathered facts
+      debug:
+        var: ansible_facts
