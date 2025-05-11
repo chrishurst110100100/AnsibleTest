@@ -6,6 +6,8 @@
       cisco.ios.ios_facts:
         gather_subset: all
       register: device_facts # Store collected facts in a variable
+      become: yes
+      become_method: enable
 
     - name: Display collected device facts
       debug:
