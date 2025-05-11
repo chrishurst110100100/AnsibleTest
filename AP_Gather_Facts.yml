@@ -1,6 +1,6 @@
 
 ---
-- hosts: cisco_wap   
+- hosts: ios   
   tasks:
 # Gather Ansible Facts About Cisco WiFi APs #
     - name: Gather Ansible Facts About Aps
