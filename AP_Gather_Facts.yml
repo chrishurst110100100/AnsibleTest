@@ -1,6 +1,6 @@
 
 ---
-- hosts: Cisco_APs     
+- hosts: Cisco_AP   
   tasks:
 # Gather Ansible Facts About Cisco WiFi APs #
     - name: Gather Ansible Facts About Aps
